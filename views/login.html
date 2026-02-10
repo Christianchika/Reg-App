@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - Registration App</title>
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<nav class="navbar">
+    <div class="container">
+        <a href="/" class="navbar-brand">📝 Registration App</a>
+        <ul class="navbar-nav">
+            <li><a href="/" class="nav-link">Home</a></li>
+            <li><a href="/register" class="nav-link">Register</a></li>
+            <li><a href="/login" class="nav-link">Login</a></li>
+            <li><a href="/dashboard" class="nav-link">Dashboard</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container" style="max-width: 400px; margin-top:3rem;">
+    <div class="card">
+        <h2>Login</h2>
+        <div id="alert" class="alert" style="display:none;"></div>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" class="form-control" required>
+                <div id="email-error" class="form-error"></div>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" class="form-control" required>
+                <div id="password-error" class="form-error"></div>
+            </div>
+            <button type="submit" class="btn btn-primary" id="loginBtn">Login</button>
+        </form>
+        <p class="text-center mt-3">
+            Don't have an account? <a href="/register">Sign Up</a>
+        </p>
+    </div>
+</div>
+
+<script>
+/* --------------------- API Request --------------------- */
+async function apiRequest(endpoint, options={}) {
+    const res = await fetch(`/api${endpoint}`, {
+        headers: {'Content-Type':'application/json'},
+        ...options
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'API request failed');
+    return data;
+}
+
+/* --------------------- Alerts --------------------- */
+function showAlert(msg,type='success'){ const a=document.getElementById('alert'); a.textContent=msg;a.className=`alert alert-${type}`;a.style.display='block';}
+function hideAlert(){document.getElementById('alert').style.display='none';}
+function showLoading(btn){btn.disabled=true; btn.textContent='Please wait...';}
+function hideLoading(btn){btn.disabled=false; btn.textContent='Login';}
+
+/* --------------------- Form Submission --------------------- */
+const loginForm=document.getElementById('loginForm');
+loginForm.addEventListener('submit', async (e)=>{
+    e.preventDefault(); hideAlert();
+    const email=document.getElementById('email').value.trim();
+    const password=document.getElementById('password').value;
+    const btn=document.getElementById('loginBtn'); showLoading(btn);
+
+    try{
+        await apiRequest('/users/login',{method:'POST',body:JSON.stringify({email,password})});
+        showAlert('Login successful! Redirecting...','success');
+        setTimeout(()=>{window.location.href='/dashboard';},1000);
+    }catch(err){
+        showAlert(err.message||'Login failed','error');
+    }finally{hideLoading(btn);}
+});
+</script>
+</body>
+</html>
