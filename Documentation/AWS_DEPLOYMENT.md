@@ -150,17 +150,17 @@ sudo mysql -u root -p
 **In MySQL prompt:**
 ```sql
 -- Create database
-CREATE DATABASE registrationdb;
+CREATE DATABASE registration_db;
 
 -- Create user
-CREATE USER 'appuser'@'localhost' IDENTIFIED BY 'StrongPassword123!';
+CREATE USER 'reg_user'@'localhost' IDENTIFIED BY 'RegUserPass123!';
 
 -- Grant privileges
-GRANT ALL PRIVILEGES ON registrationdb.* TO 'appuser'@'localhost';
+GRANT ALL PRIVILEGES ON registration_db.* TO 'reg_user'@'localhost';
 FLUSH PRIVILEGES;
 
 -- Use database
-USE registrationdb;
+USE registration_db;
 
 -- Create users table
 CREATE TABLE users (
@@ -193,8 +193,8 @@ EXIT;
 ```bash
 # Clone from GitHub
 cd ~
-git clone https://github.com/YOUR-USERNAME/registration-app.git
-cd registration-app
+git clone https://github.com/Christianchika/Reg-App.git
+cd Reg-App
 
 # If you don't have GitHub, use Method B
 ```

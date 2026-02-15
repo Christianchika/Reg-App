@@ -1,5 +1,5 @@
 // API Base URL
-const API_URL = 'http://localhost:3000/api';
+const API_URL = '/api';
 
 // Show alert message
 function showAlert(message, type = 'success') {

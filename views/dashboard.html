@@ -130,7 +130,9 @@
             hideAlert();
 
             try {
-                const data = await apiRequest('/users');
+                //const data = await apiRequest('/users');
+                const res = await fetch('/api/users');
+                const data = await res.json();
                 allUsers = data.data;
 
                 if (allUsers.length === 0) {
