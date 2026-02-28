@@ -361,6 +361,93 @@ sudo systemctl enable nginx
 ### Steps:
 
 1. **Launch EC2** (same as Option 1, Steps 1-3)
+### Step 1: Launch EC2 Instance
+
+1. **Login to AWS Console**
+   - Go to https://console.aws.amazon.com
+   - Navigate to EC2 Dashboard
+
+2. **Launch Instance**
+   - Click "Launch Instance"
+
+3. **Configure Instance:**
+
+   **Name:** `registration-app-server`
+   
+   **OS Image:**
+   - Select "Ubuntu Server 22.04 LTS" (Free tier)
+   
+   **Instance Type:**
+   - `t2.micro` (1 vCPU, 1GB RAM - Free tier)
+   
+   **Key Pair:**
+   - Click "Create new key pair"
+   - Name: `registration-app-key`
+   - Type: RSA
+   - Format: `.pem` (Mac/Linux) or `.ppk` (Windows)
+   - Download and **save securely**
+   
+   **Network Settings:**
+   - Create security group: `registration-app-sg`
+   - Add these inbound rules:
+     ```
+     SSH          Port 22    Source: My IP
+     HTTP         Port 80    Source: Anywhere (0.0.0.0/0)
+     Custom TCP   Port 3000  Source: Anywhere (0.0.0.0/0)
+     ```
+   
+   **Storage:**
+   - 20 GB (Free tier: up to 30GB)
+
+4. **Launch Instance**
+   - Click "Launch Instance"
+   - Wait 2-3 minutes for initialization
+
+---
+
+### Step 2: Connect to EC2
+
+**Get Public IP:**
+- EC2 Dashboard → Instances → Select your instance
+- Copy "Public IPv4 address"
+
+**For Mac/Linux:**
+```bash
+# Set permissions on key
+chmod 400 registration-app-key.pem
+
+# Connect
+ssh -i "registration-app-key.pem" ubuntu@YOUR-PUBLIC-IP
+```
+
+**For Windows (PuTTY):**
+1. Convert `.pem` to `.ppk` using PuTTYgen
+2. Open PuTTY
+3. Host: `ubuntu@YOUR-PUBLIC-IP`
+4. SSH → Auth → Browse to `.ppk` file
+5. Click "Open"
+
+---
+
+### Step 3: Install Node.js
+
+```bash
+# Update system
+sudo apt update && sudo apt upgrade -y
+
+# Install Node.js 18
+curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+sudo apt install -y nodejs
+
+# Verify
+node --version  # Should show v18.x.x
+npm --version
+
+# Install Git
+sudo apt install git -y
+```
+
+---
 
 2. **Create RDS Instance:**
    - AWS Console → RDS
@@ -609,5 +696,3 @@ Your Registration App is now live on AWS!
 - Stack Overflow: https://stackoverflow.com
 
 ---
-
-Made with ❤️ for AWS deployment
